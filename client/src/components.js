@@ -3,6 +3,8 @@ import blessed from 'blessed'
 export default class ComponentsBuilder{
     #screen
     #layout
+    #input
+    #chat
 
     constructor(){}
 
@@ -32,7 +34,7 @@ export default class ComponentsBuilder{
 
     setLayoutComponent(){
        this.#layout = blessed.layout({
-           parent: this.screen,
+           parent: this.#screen,
            width: '100%',
            height: '100%'
        })
@@ -41,7 +43,7 @@ export default class ComponentsBuilder{
 
     setInputComponent(onEnterPressed){
         const input = blessed.textarea({
-            parent: this.screen,
+            parent: this.#screen,
             bottom: 0,
             height: '10%',
             inputOnFocus: true,
@@ -56,6 +58,32 @@ export default class ComponentsBuilder{
         })
 
         input.key('enter', onEnterPressed)
+        this.#input = input
+
+        return this
+    }
+
+    setChatComponent(){
+        this.#chat= blessed.list({
+            ...this.#baseComponent(),
+            parent: this.#layout,
+            align: 'left',
+            width: '50%',
+            height: '90%',
+            items: ['{bold}Messenger{/}']
+        })
+
+        return this 
+    }
+
+    build(){
+        const components = {
+            screen: this.#screen,
+            input: this.#input,
+            chat: this.#chat
+        }
+
+        return components
     }
     
 }
